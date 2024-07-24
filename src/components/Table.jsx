@@ -5,7 +5,7 @@ import PropTypes from "prop-types";
 import { generateUUIDWithoutHyphens } from "../helpers/parseText";
 
 function Table({ data }) {
-  const [items, setItems] = useState(data);
+  const [items, setItems] = useState(data.fields);
   const { activeIndex, setActiveIndex } = tableStore();
 
   const handleAddField = () => {
@@ -34,7 +34,7 @@ function Table({ data }) {
   return (
     <>
       <div className="w-full text-center py-2 rounded-tr-lg rounded-tl-lg bg-[#40CF8F] border-b-transparent">
-        <h1>Column</h1>
+        <h1>{data.table}</h1>
       </div>
       <div className="w-full relative bg-white">
         {items.map((item, index) => (

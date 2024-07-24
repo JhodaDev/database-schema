@@ -8,6 +8,8 @@ import { useState } from "react";
 import useAIStore from "../store/aiStore";
 import { useNavigate } from "react-router-dom";
 import parseText, { getMarkdown } from "../helpers/parseText";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 const openai = createOpenAI({
   apiKey: import.meta.env.VITE_OPENIA_KEY,
@@ -15,6 +17,7 @@ const openai = createOpenAI({
 
 export const Start = () => {
   const [value, setValue] = useState("");
+  const [loading, setLoading] = useState(false);
   const { setTables, setMarkdown } = useAIStore((state) => state);
   const navigate = useNavigate();
 
@@ -53,6 +56,7 @@ export const Start = () => {
 
         EL EJEMPLO DE JAVASCRIPT SOLO ES UNA REFERENCIA, NO DEBES COPIARLO EXACTAMENTE, DEBES CREAR TU PROPIO ESQUEMA DE BASE DE DATOS Y DEBE SER REAL DE COMO SE CREARIA EN UNA BASE DE DATOS SQL O NO SQL EN JAVASCRIPT..
 
+        - TAMBIEN TIENES PROHIBIDO PONER ASCENTOS O CARACTERES ESPECIALES EN LOS NOMBRES DE LAS TABLAS Y LOS CAMPOS, DEBES USAR SOLO LETRAS Y NUMEROS.
         - Debe ser una respuesta coherente y bien estructurada.
         - NO SE DEBE AGREGAR NINGUN TIPO DE CONTENIDO ADICIONAL, NI TAMPOCO LO DEVUELVAS CON FORMATO MARKDOWN, TAMPOCO AGREGUES COMENTARIOS AL CODIGO, SOLO TEXTO PLANO.
         - EN EL CODIGO TIENES PROHIBIDO AGREGAR COMENTARIOS, O CUALQUIER TIPO DE TEXTO ADICIONAL, UNICAMENTE DEBES RESPONDE CON CODIGO.
@@ -61,7 +65,7 @@ export const Start = () => {
         - Si ves que a la descripcion le hace falta informacion importante para la creacion de una base de datos como por ejemplo
         llaves primarias y llaves foraneas para base de datos relaciones y ids para base de datos no relacionales debes agregar estos campos en el mismo formato que los demas campos.
         - Siempre agrega la creacion de la base de datos y la creacion de los campos
-        - CUANDO HAYAN RELACIONES ENTRE LAS TABLAS DEBES AGREGARLAS COMO SE MUESTRA EN EL EJEMPLO, ADICIONAL EL NOMBRE DE LA TABLA Y EL NOMBRE DEL CAMPO 
+        - CUANDO HAYAN RELACIONES ENTRE LAS TABLAS DEBES AGREGARLAS COMO SE MUESTRA EN EL EJEMPLO, ADICIONAL EL NOMBRE DE LA TABLA Y EL NOMBRE DEL CAMPO
           TIENE QUE SER EXACTAMENTE IGUAL A COMO ESTA EN EL JSON, TIENES PROHIBIDO PONERLO EN MAYUSCULAS O MINUSCULAS, TIENE QUE SER EXACTAMENTE IGUAL,
           POR EJEMPLO SI LA TABLA A QUE HACE REFERENCIA SE LLAMA "user" EN EL CAMPO TABLE DE LA PROPIEDA REFERENCE DEBE DECIR "user" Y NO "User" O "USER" O "uSeR" O "users" O CUALQUIER OTRA FORMA.
 
@@ -70,6 +74,8 @@ export const Start = () => {
     `;
 
     let str = "";
+
+    setLoading(true);
 
     const { textStream } = await streamText({
       model: openai("gpt-4o"),
@@ -103,16 +109,27 @@ export const Start = () => {
           className="max-w-2xl w-full bg-[#181622] mt-6 py-2 px-4 rounded-md flex items-center gap-4"
           onSubmit={handleFormSubmit}
         >
-          <input
-            type="text"
-            placeholder="Create a SQL database with 2 tables"
-            className="w-full h-full bg-transparent focus:outline-none"
-            value={value}
-            onChange={(event) => setValue(event.target.value)}
-          />
-          <button type="submit">
-            <IconSend />
-          </button>
+          {!loading ? (
+            <>
+              <input
+                type="text"
+                placeholder="Create a SQL database with 2 tables"
+                className="w-full h-full bg-transparent focus:outline-none"
+                value={value}
+                onChange={(event) => setValue(event.target.value)}
+              />
+              <button type="submit">
+                <IconSend />
+              </button>
+            </>
+          ) : (
+            <div className="flex justify-center w-full">
+              <div className="flex flex-col items-center">
+                <Skeleton circle={true} height={40} width={40} />
+                <Skeleton width={300} height={40} />
+              </div>
+            </div>
+          )}
         </form>
       </div>
     </Background>

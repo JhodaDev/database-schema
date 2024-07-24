@@ -35,7 +35,10 @@ export const getNodes = (arr) => {
       id: `${globalId}-global`,
       type: "table",
       position: { x: 0, y: index * 300 },
-      data: fields,
+      data: {
+        fields,
+        table: tableName
+      },
       table: tableName,
       relationFields,
     };
@@ -91,32 +94,35 @@ export const getRelations = (arr) => {
 
   return relationFields.map((item) => {
     const { data } = item;
-    const dataRelation = data.find((item) =>
+    const dataRelation = data.fields.filter((item) =>
       Object.prototype.hasOwnProperty.call(item, "relations")
-    );
+    ); 
 
-    const { relations } = dataRelation;
-    const table = arr.find((item) => item.table === relations.table);
-    const { data: dataTable } = table;
+    return dataRelation.map((itemRelation) => {
+      const { relations } = itemRelation
+      const table = arr.find((item) => item.table === relations.table)
+      const { data: dataTable } = table
 
-    const dataField = dataTable.find((item) => item[relations.field]);
+      
 
-    const leftId = dataRelation.fields[0].id;
-    const rightId = dataField.fields[0].id;
+      const dataField = dataTable.fields.find((item) => item[relations.field])
 
+      const leftId = itemRelation.fields[0].id
+      const rightId = dataField.fields[0].id
 
-    const globalId = `e${leftId}-${rightId}`;
+      const globalId = `e${leftId}-${rightId}`
 
-    return {
-      id: globalId,
-      source: `${item.id}`,
-      target: `${table.id}`,
-      sourceHandle: `${leftId}-source`,
-      targetHandle: `${rightId}-target`,
-      animated: true,
-      type: "step",
-    };
-  });
+      return {
+        id: globalId,
+        source: `${item.id}`,
+        target: `${table.id}`,
+        sourceHandle: `${leftId}-source`,
+        targetHandle: `${rightId}-target`,
+        animated: true,
+        type: "step",
+      }
+    })
+  }).flat();
 };
 
 export function generateUUIDWithoutHyphens() {

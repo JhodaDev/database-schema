@@ -49,7 +49,7 @@ function Dashboard() {
 
   return (
     <div className="grid grid-cols-table h-screen w-full">
-      <div className="overflow-auto">
+      <div className="overflow-auto content-code">
         <Markdown rehypePlugins={[rehypeHighlight, rehypeRaw]}>
           {markdown}
         </Markdown>
