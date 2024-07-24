@@ -13,6 +13,10 @@ code {
   @apply bg-[#1c1c1c];
 }
 
+.react-flow__handle {
+  @apply opacity-0;
+}
+
 .content-code {
   scrollbar-width: thin;
   scrollbar-color: #888 #eee;

@@ -34,7 +34,9 @@ export const Input = ({ id, position, valueInput = "Campo" }) => {
       {position === "Left" && <Diamon />}
       <input
         type="text"
-        className="w-full focus:outline-none select-none bg-transparent text-white border-none"
+        className={`w-full focus:outline-none select-none bg-transparent text-gray-500 border-none py-1 ${
+          position === "Right" ? "text-right" : "text-left"
+        }`}
         ref={inputRef}
         value={value}
         onChange={handleChange}

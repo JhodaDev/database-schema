@@ -57,7 +57,7 @@ export const getDataTable = (obj) => {
 
       let upperKey =
         typeof childrens[child] === "string"
-          ? childrens[child].charAt(0).toUpperCase() + childrens[child].slice(1)
+          ? childrens[child].toLowerCase() 
           : childrens[child];
 
       globalId = generateUUIDWithoutHyphens();
