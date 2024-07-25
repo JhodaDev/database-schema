@@ -1,6 +1,7 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Dashboard from "./pages/Dasboard";
 import { Start } from "./pages/Start";
+import "react-tooltip/dist/react-tooltip.css";
 
 const router = createBrowserRouter([
   {
