@@ -10,10 +10,7 @@ import { useNavigate } from "react-router-dom";
 import parseText, { getMarkdown } from "../helpers/parseText";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-
-const openai = createOpenAI({
-  apiKey: import.meta.env.VITE_OPENIA_KEY,
-});
+import openai from "../helpers/openia";
 
 export const Start = () => {
   const [value, setValue] = useState("");
