@@ -1,18 +1,39 @@
 import { Tooltip } from "react-tooltip";
 import { IconTable } from "./icons/IconTable";
-import useAIStore from "../store/aiStore";
+import tableStore from "../store/tableStore";
+import { generateUUIDWithoutHyphens } from "../helpers/parseText";
 
 export const AddTableButton = () => {
-  const { tables, setTables } = useAIStore((state) => state);
+  const { nodes, setNodes } = tableStore();
 
   const handleClick = () => {
     const obj = {
-      "Nueva tabla": {
-        campo: "string",
+      id: `${generateUUIDWithoutHyphens()}-global`,
+      type: "table",
+      position: { x: 0, y: 0 },
+      data: {
+        fields: [
+          {
+            id: generateUUIDWithoutHyphens(),
+            fields: [
+              {
+                id: generateUUIDWithoutHyphens(),
+                value: "campo",
+              },
+              {
+                id: generateUUIDWithoutHyphens(),
+                value: "string",
+              },
+            ],
+          },
+        ],
+        table: "Nueva tabla",
       },
+      table: "Nueva tabla",
+      relationFields: false,
     };
 
-    setTables([...tables, obj]);
+    setNodes([...nodes, obj]);
   };
 
   return (

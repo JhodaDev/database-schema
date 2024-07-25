@@ -7,13 +7,13 @@ import {
   ReactFlow,
 } from "@xyflow/react";
 import { useCallback, useEffect, useState } from "react";
-import { getNodes, getRelations } from "../helpers/parseText";
-import useAIStore from "../store/aiStore";
+import { getRelations } from "../helpers/parseText";
 import { DownloadButton } from "./DownloadButton";
 import { AddTableButton } from "./AddTableButton";
 import Table from "./Table";
 
 import "@xyflow/react/dist/style.css";
+import tableStore from "../store/tableStore";
 
 const rfStyle = {
   backgroundColor: "#1C1C1C",
@@ -22,21 +22,27 @@ const defaultViewport = { x: 10, y: 0, zoom: 2 };
 const nodeTypes = { table: Table };
 
 export const FlowDashboard = () => {
-  const { tables } = useAIStore((state) => state);
+  const { nodes: nodesStore, setNodes: setNodesStore } = tableStore();
+  const [nodes, setNodes] = useState(nodesStore);
 
-  const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
 
   useEffect(() => {
-    const generatedNodes = getNodes(tables);
-    setNodes(generatedNodes);
-    const generatedEdges = getRelations(generatedNodes);
+    const generatedEdges = getRelations(nodes);
     setEdges(generatedEdges);
-  }, [tables]);
+  }, [nodes]);
+
+  useEffect(() => {
+    setNodes(nodesStore);
+  }, [nodesStore]);
 
   const onNodesChange = useCallback(
-    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
-    []
+    (changes) => {
+      const updatedNodes = applyNodeChanges(changes, nodes);
+      setNodes(updatedNodes);
+      setNodesStore(updatedNodes);
+    },
+    [nodes, setNodesStore]
   );
   const onEdgesChange = useCallback(
     (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
