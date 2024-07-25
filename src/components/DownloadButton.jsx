@@ -64,15 +64,15 @@ export const DownloadButton = () => {
             className="absolute mt-2 bg-white -right-3 border border-gray-200 rounded-md shadow-lg z-50 w-max top-7"
           >
             <ItemMenu onClick={handleClose}>
-              <IconJPG />
+              <IconJPG fill="#39EE56" />
               <span>Export as JPEG</span>
             </ItemMenu>
             <ItemMenu onClick={handleClose}>
-              <IconJPG />
+              <IconJPG fill="#3988f0" />
               <span>Export as PNG</span>
             </ItemMenu>
             <ItemMenu onClick={handleClose}>
-              <IconJPG />
+              <IconJPG fill="#F28520" />
               <span>Export as SVG</span>
             </ItemMenu>
           </motion.div>
