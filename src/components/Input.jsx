@@ -4,7 +4,7 @@ import { useRef, useState } from "react";
 import tableStore from "../store/tableStore";
 import { Diamon } from "./icons/Diamon";
 
-export const Input = ({ id, position, valueInput = "Campo" }) => {
+export const Input = ({ id, position, valueInput = "Campo", ...props }) => {
   const { setActiveIndex } = tableStore();
   const [value, setValue] = useState(valueInput);
   const ref = useRef(null);
@@ -34,9 +34,9 @@ export const Input = ({ id, position, valueInput = "Campo" }) => {
       {position === "Left" && <Diamon />}
       <input
         type="text"
-        className={`w-full focus:outline-none select-none bg-transparent text-gray-500 border-none py-1 ${
+        className={`w-full focus:outline-none select-none bg-transparent border-none py-1 ${
           position === "Right" ? "text-right" : "text-left"
-        }`}
+        } ${props.className}`}
         ref={inputRef}
         value={value}
         onChange={handleChange}
@@ -47,15 +47,29 @@ export const Input = ({ id, position, valueInput = "Campo" }) => {
         onDoubleClick={handleDoubleClick}
         ref={ref}
       ></div>
-      <Handle type="target" position={Position[position]} id={`${id}-target`} />
-      <Handle type="source" position={Position[position]} id={`${id}-source`} />
+      {props.handle && (
+        <>
+          <Handle
+            type="target"
+            position={Position[position]}
+            id={`${id}-target`}
+          />
+          <Handle
+            type="source"
+            position={Position[position]}
+            id={`${id}-source`}
+          />
+        </>
+      )}
     </div>
   );
 };
 
 Input.propTypes = {
-  id: PropTypes.string.isRequired,
-  position: PropTypes.string.isRequired,
+  id: PropTypes.string,
+  position: PropTypes.string,
   valueInput: PropTypes.string,
   bg: PropTypes.string,
+  handle: PropTypes.bool,
+  className: PropTypes.string,
 };
