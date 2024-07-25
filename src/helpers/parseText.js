@@ -119,7 +119,7 @@ export const getRelations = (arr) => {
         sourceHandle: `${leftId}-source`,
         targetHandle: `${rightId}-target`,
         animated: true,
-        type: "step",
+        type: "smoothstep",
       }
     })
   }).flat();
