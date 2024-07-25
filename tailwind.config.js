@@ -10,7 +10,7 @@ export default {
         poppins: ["Poppins", "sans-serif"],
       },
       gridTemplateColumns: {
-        "table": "40px 600px 1fr",
+        "table": "40px 500px 1fr",
       }
     },
   },
