@@ -30,9 +30,13 @@ function Table({ data }) {
   return (
     <div className="">
       <div className="w-full text-center rounded-tr-lg rounded-lg bg-[#40CF8F] border-b-transparent px-1 pb-1">
-        <div className="flex px-3 py-2 gap-2">
+        <div className="flex items-center px-3 py-2">
           <IconCube />
-          <span className="font-medium">{data.table}</span>
+          <Input
+            valueInput={data.table}
+            handle={false}
+            className="text-white"
+          />
         </div>
         <div className="w-full bg-white rounded-tl-md rounded-tr-md flex flex-col">
           {items.map((item) => (
@@ -42,12 +46,16 @@ function Table({ data }) {
                 id={item.fields[0].id}
                 position="Left"
                 valueInput={item.fields[0].value}
+                className="text-gray-500"
+                handle={true}
               />
               <Input
                 key={`${item.fields[1].id}-right`}
                 id={item.fields[1].id}
                 position="Right"
                 valueInput={item.fields[1].value}
+                className="text-gray-500"
+                handle={true}
               />
             </div>
           ))}
