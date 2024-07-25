@@ -1,4 +1,3 @@
-import { createOpenAI } from "@ai-sdk/openai";
 import { streamText } from "ai";
 
 import { IconProject } from "../components/icons/IconProject";
@@ -7,68 +6,25 @@ import { Background } from "../components/ui/Background";
 import { useState } from "react";
 import useAIStore from "../store/aiStore";
 import { useNavigate } from "react-router-dom";
-import parseText, { getMarkdown } from "../helpers/parseText";
+import parseText, { getMarkdown, getNodes } from "../helpers/parseText";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import openai from "../helpers/openia";
+import tableStore from "../store/tableStore";
+import prompts from "../helpers/prompts";
 
 export const Start = () => {
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setTables, setMarkdown } = useAIStore((state) => state);
+  const { setMarkdown } = useAIStore((state) => state);
+  const { setNodes } = tableStore();
+
   const navigate = useNavigate();
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    const prompt = `
-        Eres un experto en modelado de bases de datos SQL y noSQL.
-
-        Tu tarea es que a partir de la siguiente descripción, crees un esquema de base de datos que cumpla con los requerimientos.
-        Si la descripcion no es la de un esquema de base de datos, debes responder con un mensaje de error.
-        Tu respuesta debe cumplir los siguientes criterios:
-
-        - Debe ser un esquema de base de datos SQL o noSQL.
-        - La respuesta debe dividirse en dos partes: la primera parte debe ser la creacion de la base de datos en JavaScript y la segunda parte
-            debe ser solo los campos de las tablas en un formato json, por ejemplo:
-
-            ========== FIELDS ==========
-
-            {
-                table1: {
-                    id: 'value type',
-                    name: 'value type',
-                    age: 'value type',
-                },
-                table2: {
-                    id: 'value type',
-                    name: 'value type',
-                    age: 'value type',
-                    "userId":{
-                      valueType:"value type" ,
-                      reference:{ table:"table" , field:"field"}
-                    }
-                },
-            }
-
-        EL EJEMPLO DE JAVASCRIPT SOLO ES UNA REFERENCIA, NO DEBES COPIARLO EXACTAMENTE, DEBES CREAR TU PROPIO ESQUEMA DE BASE DE DATOS Y DEBE SER REAL DE COMO SE CREARIA EN UNA BASE DE DATOS SQL O NO SQL EN JAVASCRIPT..
-
-        - TAMBIEN TIENES PROHIBIDO PONER ASCENTOS O CARACTERES ESPECIALES EN LOS NOMBRES DE LAS TABLAS Y LOS CAMPOS, DEBES USAR SOLO LETRAS Y NUMEROS.
-        - Debe ser una respuesta coherente y bien estructurada.
-        - NO SE DEBE AGREGAR NINGUN TIPO DE CONTENIDO ADICIONAL, NI TAMPOCO LO DEVUELVAS CON FORMATO MARKDOWN, TAMPOCO AGREGUES COMENTARIOS AL CODIGO, SOLO TEXTO PLANO.
-        - EN EL CODIGO TIENES PROHIBIDO AGREGAR COMENTARIOS, O CUALQUIER TIPO DE TEXTO ADICIONAL, UNICAMENTE DEBES RESPONDE CON CODIGO.
-        - Limitate unicamante a responder como se te pidio en el ejemplo.
-        - Los datos en el json me los debes dar en el formato de la base de datos que hayas elegido
-        - Si ves que a la descripcion le hace falta informacion importante para la creacion de una base de datos como por ejemplo
-        llaves primarias y llaves foraneas para base de datos relaciones y ids para base de datos no relacionales debes agregar estos campos en el mismo formato que los demas campos.
-        - Siempre agrega la creacion de la base de datos y la creacion de los campos
-        - CUANDO HAYAN RELACIONES ENTRE LAS TABLAS DEBES AGREGARLAS COMO SE MUESTRA EN EL EJEMPLO, ADICIONAL EL NOMBRE DE LA TABLA Y EL NOMBRE DEL CAMPO
-          TIENE QUE SER EXACTAMENTE IGUAL A COMO ESTA EN EL JSON, TIENES PROHIBIDO PONERLO EN MAYUSCULAS O MINUSCULAS, TIENE QUE SER EXACTAMENTE IGUAL,
-          POR EJEMPLO SI LA TABLA A QUE HACE REFERENCIA SE LLAMA "user" EN EL CAMPO TABLE DE LA PROPIEDA REFERENCE DEBE DECIR "user" Y NO "User" O "USER" O "uSeR" O "users" O CUALQUIER OTRA FORMA.
-
-        esta es la descripcion:
-        ${value}
-    `;
+    const prompt = prompts.GENERATE_DB(value).prompt;
 
     let str = "";
 
@@ -84,12 +40,10 @@ export const Start = () => {
       str += textPart;
     }
 
-    console.log(str);
-
     const elements = parseText(str);
     const markdown = getMarkdown(str);
-    setTables(elements);
     setMarkdown(markdown);
+    setNodes(getNodes(elements));
 
     navigate("/dashboard");
   };
