@@ -6,7 +6,7 @@ import {
   BackgroundVariant,
   ReactFlow,
 } from "@xyflow/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { getRelations } from "../helpers/parseText";
 import { DownloadButton } from "./DownloadButton";
 import { AddTableButton } from "./AddTableButton";
@@ -24,7 +24,7 @@ const nodeTypes = { table: Table };
 export const FlowDashboard = () => {
   const { nodes: nodesStore, setNodes: setNodesStore } = tableStore();
   const [nodes, setNodes] = useState(nodesStore);
-
+  const flowRef = useRef(null);
   const [edges, setEdges] = useState([]);
 
   useEffect(() => {
@@ -36,14 +36,20 @@ export const FlowDashboard = () => {
     setNodes(nodesStore);
   }, [nodesStore]);
 
+  // const onNodesChange = useCallback(
+  //   (changes) => {
+  //     const updatedNodes = applyNodeChanges(changes, nodes);
+  //     setNodes(updatedNodes);
+  //     setNodesStore(updatedNodes);
+  //   },
+  //   [nodes, setNodesStore]
+  // );
+
   const onNodesChange = useCallback(
-    (changes) => {
-      const updatedNodes = applyNodeChanges(changes, nodes);
-      setNodes(updatedNodes);
-      setNodesStore(updatedNodes);
-    },
-    [nodes, setNodesStore]
+    (changes) => setNodes((nds) => applyNodeChanges(changes, nds)),
+    []
   );
+
   const onEdgesChange = useCallback(
     (changes) => setEdges((eds) => applyEdgeChanges(changes, eds)),
     []
@@ -60,6 +66,7 @@ export const FlowDashboard = () => {
         height: "100vh",
         width: "100%",
       }}
+      ref={flowRef}
     >
       <ReactFlow
         nodes={nodes}
@@ -74,12 +81,13 @@ export const FlowDashboard = () => {
         zoomOnPinch={true}
         zoomOnDoubleClick={true}
         defaultViewport={defaultViewport}
+        minZoom={0.5}
       >
-        <Background variant={BackgroundVariant.Dots} gap={40} />
+        <Background bgColor="#fff" variant={BackgroundVariant.Lines} gap={30} />
 
-        <div className="w-full flex justify-center py-2 relative z-50">
+        <div className="w-full flex justify-center py-2 relative z-50 header-left">
           <div className="bg-[#252525] py-2 px-4 rounded-lg shadow-lg shadow-[#ffffff1e] flex items-center gap-6">
-            <DownloadButton />
+            <DownloadButton flowRefs={flowRef} nodes={nodes} />
             <AddTableButton />
           </div>
         </div>

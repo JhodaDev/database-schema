@@ -1,9 +1,11 @@
+import PropTypes from "prop-types";
 import { useState } from "react";
 import { IconDownload } from "./icons/IconDownload";
 import { IconJPG } from "./icons/IconJPG";
 import { Tooltip } from "react-tooltip";
 import { AnimatePresence, motion } from "framer-motion";
 import { ItemMenu } from "./ui/ItemMenu";
+import html2canvas from "html2canvas";
 
 const variants = {
   open: {
@@ -26,15 +28,15 @@ const variants = {
   },
 };
 
-export const DownloadButton = () => {
+export const DownloadButton = ({ flowRefs, nodes }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleClose = () => {
-    setIsOpen(false);
+  const handleDownload = async (type) => {
+    console.log("Descargando");
   };
 
   return (
@@ -63,15 +65,15 @@ export const DownloadButton = () => {
             variants={variants}
             className="absolute mt-2 bg-white -right-3 border border-gray-200 rounded-md shadow-lg z-50 w-max top-7"
           >
-            <ItemMenu onClick={handleClose}>
+            <ItemMenu onClick={() => handleDownload("jpeg")}>
               <IconJPG fill="#39EE56" />
               <span>Export as JPEG</span>
             </ItemMenu>
-            <ItemMenu onClick={handleClose}>
+            <ItemMenu onClick={() => handleDownload("png")}>
               <IconJPG fill="#3988f0" />
               <span>Export as PNG</span>
             </ItemMenu>
-            <ItemMenu onClick={handleClose}>
+            <ItemMenu onClick={() => handleDownload("svg")}>
               <IconJPG fill="#F28520" />
               <span>Export as SVG</span>
             </ItemMenu>
@@ -80,4 +82,9 @@ export const DownloadButton = () => {
       </AnimatePresence>
     </div>
   );
+};
+
+DownloadButton.propTypes = {
+  flowRefs: PropTypes.object.isRequired,
+  nodes: PropTypes.array.isRequired,
 };

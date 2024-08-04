@@ -22,10 +22,7 @@ function parseText(text) {
 export function getMarkdown(text) {
   const parts = text.split("========== FIELDS ==========");
   const markdown = parts[0].trim();
-  return `\`\`\`js
-${markdown}
-\`\`\`
-`;
+  return markdown
 }
 
 export const getNodes = (arr) => {

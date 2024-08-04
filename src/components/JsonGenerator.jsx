@@ -77,15 +77,13 @@ export const JsonGenerator = () => {
   });
 
   return (
-    <div className="bg-[#2e2e2e] py-6 shadow-lg overflow-auto">
+    <div className="bg-white border-r-[1px] p-6 border-r-gray-200 shadow-lg overflow-auto">
       <form
         onSubmit={formik.handleSubmit}
-        className="max-w-md mx-auto p-6 bg-[#3e3e3e] rounded-lg"
+        className="max-w-md mx-auto rounded-lg"
       >
         <div className="flex flex-col mb-6">
-          <label className="text-white mb-2 font-semibold">
-            Seleccione la tabla
-          </label>
+          <label className="mb-2 font-semibold">Seleccione la tabla</label>
           <Select
             name="table"
             value={formik.values.table}
@@ -96,7 +94,7 @@ export const JsonGenerator = () => {
           />
         </div>
         <div className="flex flex-col mb-6">
-          <label className="text-white mb-2 font-semibold">Formato</label>
+          <label className=" mb-2 font-semibold">Formato</label>
           <Select
             name="format"
             value={formik.values.format}
@@ -107,9 +105,7 @@ export const JsonGenerator = () => {
           />
         </div>
         <div className="flex flex-col mb-6">
-          <label className="text-white mb-2 font-semibold">
-            Número de registros
-          </label>
+          <label className=" mb-2 font-semibold">Número de registros</label>
           <Select
             name="number"
             value={formik.values.number}
@@ -121,7 +117,7 @@ export const JsonGenerator = () => {
         </div>
         <button
           type="submit"
-          className="bg-[#40CF8F] px-5 py-3 rounded-md font-semibold w-full text-white hover:bg-[#36b87a] transition-colors duration-300"
+          className="bg-[#40CF8F] px-5 py-3 rounded-md font-semibold w-full  hover:bg-[#36b87a] transition-colors duration-300"
         >
           Generar
         </button>
@@ -129,13 +125,13 @@ export const JsonGenerator = () => {
       <div className="max-w-lg mx-auto mt-8 shadow-md">
         {generatedText && (
           <>
-            <div className="bg-[#3a3a3a] py-3 px-4 text-white rounded-tl-lg rounded-tr-lg font-semibold">
+            <div className="bg-[#3a3a3a] py-3 px-4  rounded-tl-lg rounded-tr-lg font-semibold">
               <span>Resultado</span>
             </div>
             <div className="overflow-auto max-h-96 h-full bg-[#2e2e2e] p-4 rounded-bl-lg rounded-br-lg">
               <Markdown
                 rehypePlugins={[rehypeHighlight, rehypeRaw]}
-                className="text-white"
+                className=""
               >
                 {generatedText}
               </Markdown>
