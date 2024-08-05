@@ -1,22 +1,21 @@
 import { IoMdCode } from "react-icons/io";
 import { VscJson } from "react-icons/vsc";
-import { JsonGenerator } from "./JsonGenerator";
 import navigateStore from "../store/navigateStore";
 import { Tooltip } from "react-tooltip";
-import { Editor } from "./cm/Editor";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const menu = [
-  { component: Editor, icon: <IoMdCode />, label: "Markdown" },
-  { component: JsonGenerator, icon: <VscJson />, label: "Generate data" },
+  { href: "/dashboard", icon: <IoMdCode />, label: "Code" },
+  { href: "/ai", icon: <VscJson />, label: "Generate data" },
 ];
 
 export const LeftBar = () => {
   const [selected, setSelected] = useState(menu[0].label);
-  const { setShowComponent } = navigateStore();
+  const { setHref } = navigateStore();
 
-  const handleClick = (component, label) => {
-    setShowComponent(component);
+  const handleClick = (href, label) => {
+    setHref(href);
     setSelected(label);
   };
 
@@ -25,21 +24,22 @@ export const LeftBar = () => {
       {menu.map((item) => (
         <div
           className={`
-            w-full flex justify-center h-9 relative ${
+            w-full flex justify-center items-center h-9 relative ${
               selected === item.label
                 ? "bg-white text-black rounded-tl-md rounded-bl-md "
                 : ""
             }`}
           key={crypto.randomUUID()}
         >
-          <button
+          <Link
+            to={item.href}
             data-tooltip-content={item.label}
             data-tooltip-id={item.label}
             key={item.label}
-            onClick={() => handleClick(item.component, item.label)}
+            onClick={() => handleClick(item.href, item.label)}
           >
             {item.icon}
-          </button>
+          </Link>
           <Tooltip
             id={item.label}
             place="right"

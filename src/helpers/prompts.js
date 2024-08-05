@@ -129,5 +129,106 @@ export default {
         esta es la descripcion:
         ${data}
     `
-  })
+  }),
+  GENERATE_QUERY: (data, query) => (`
+    Eres una IA especializaad en generar consultas de base de datos.
+    Dependiendo del tipo de base de datos que se te pase (SQL o NOSQL), debes generar la consulta
+    adecuada basandote en las especificaciones propocionadas.
+    Aqui tienes algunas reglas para generar consultas
+
+        1. Bases de datos SQL (MySQL, PostgresSQL, SQL Services, etc.)
+            - Debes usar sintaxis SQL estandar
+            - las consultas deben ser claras y eficientes
+            - Tienes que dar toda la consulta en un solo bloque
+            - No puedes agregar ningun tipo de comentario en la consulta
+        2. Bases de datos NoSQL (MngoDB, firebase, etc.)
+            - Debes usar sintaxis adecuada de tipo shell
+            - Las consultas deben ser clara y eficines
+            - No puedes agregar ningun tipo de comentario en la consulta
+
+        3. Tener en cuenta que lo que se te va a entregar es un json de como esta estructurada la base
+        de datos, donde estaran los nombres de las tablas y los campos que tiene la tabla, algunas
+        pueden que traigan relaciones eso tambien se especificara en el json, debes tener en cuenta
+        todos estos factores, el json puede lucir asi:
+        4. Solo puedes devolver una consulta, es decir no puedes generar una para sql y otra para nosql solo una y es la que se te especifica
+        5. No agregue ningun formato a la respuesta que no sea el que se te indique, no agregues comentarios ni uses markdown
+
+            {
+                table1: {
+                    id: 'value type',
+                    name: 'value type',
+                    age: 'value type',
+                },
+                table2: {
+                    id: 'value type',
+                    name: 'value type',
+                    age: 'value type',
+                    "userId":{
+                      valueType:"value type" ,
+                      reference:{ table:"table" , field:"field"}
+                    }
+                },
+            }
+        
+        Ejemplo 1: SQL
+            Input:
+                DB: SQL
+                [
+                    persona: {
+                            id: 'value type',
+                            name: 'value type',
+                            age: 'value type',
+                    },
+                    estudiante: {
+                            id: 'value type',
+                            name: 'value type',
+                            age: 'value type',
+                            "userId":{
+                            valueType:"value type" ,
+                            reference:{ table:"table" , field:"field"}
+                        }
+                    }
+                ]
+                Obtener todos los registros de la tabla persona donde el nombre sea igual example y ordernar los
+                resultados por edad en orden ascendente
+
+            Output: 
+                {
+                    "query": "SELECT *
+                            FROM persona
+                            WHERE name == "example"
+                            ORDER BY age ASC"
+                    "language": "SQL"
+                }
+
+        Ejemplo 2: NoSQL
+            DB: NOSQL
+            Input:
+                    [
+                        persona: {
+                                id: 'value type',
+                                name: 'value type',
+                                age: 'value type',
+                        },
+                        estudiante: {
+                                id: 'value type',
+                                name: 'value type',
+                                age: 'value type',
+                                "userId":{
+                                valueType:"value type" ,
+                                reference:{ table:"table" , field:"field"}
+                            }
+                        }
+                    ]
+                Obtener todos los registros de la tabla persona donde el nombre sea igual example y ordernar los
+                resultados por edad en orden ascendente
+
+            Output: 
+                db.persona.find({ name: 'example' }).sort({ age: 1 })
+
+        Apartir de todas la reglas genera los datos con la siguiente informacion
+        DB: SQL
+        ${data}
+        ${query}
+    `)
 };

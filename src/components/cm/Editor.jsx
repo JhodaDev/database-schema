@@ -1,34 +1,50 @@
+import PropTypes from "prop-types";
 import { useCodeMirror } from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
 import { useEffect, useRef, useState } from "react";
 import { githubLight } from "@uiw/codemirror-theme-github";
-import useAIStore from "../../store/aiStore";
 import * as prettier from "prettier/standalone";
 import * as prettierPl from "prettier/parser-babel";
 import * as prettierPluginEstree from "prettier/plugins/estree";
+import prettierPluginSql from "prettier-plugin-sql";
+import { sql } from "@codemirror/lang-sql";
 
-export const Editor = () => {
-  const { markdown } = useAIStore((state) => state);
+const languages = {
+  JS: {
+    language: javascript,
+    parser: "babel",
+    plugins: [prettierPl, prettierPluginEstree],
+  },
+  SQL: {
+    language: sql,
+    parser: "sql",
+    plugins: [prettierPluginSql],
+  },
+};
+
+export const Editor = ({ code, language = "JS" }) => {
   const [formatted, setFormatted] = useState("");
   const editor = useRef(null);
 
   useEffect(() => {
-    (async () => {
-      const formatted = await prettier.format(markdown, {
-        parser: "babel",
-        plugins: [prettierPl, prettierPluginEstree],
-        printWidth: 65,
-        tabWidth: 2,
-        semi: false,
-      });
+    if (language.length) {
+      (async () => {
+        const formatted = await prettier.format(code, {
+          parser: languages[language].parser,
+          plugins: languages[language].plugins,
+          printWidth: 65,
+          tabWidth: 2,
+          semi: false,
+        });
 
-      setFormatted(formatted);
-    })();
-  }, [markdown]);
+        setFormatted(formatted);
+      })();
+    }
+  }, [code, language]);
 
   const { setContainer } = useCodeMirror({
     container: editor.current,
-    extensions: [javascript()],
+    extensions: [languages[language]?.language()],
     value: formatted,
     height: "100%",
     theme: githubLight,
@@ -47,4 +63,10 @@ export const Editor = () => {
   }, [setContainer]);
 
   return <div ref={editor} className="overflow-auto border-r-[1px]"></div>;
+};
+
+Editor.propTypes = {
+  code: PropTypes.string.isRequired,
+  language: PropTypes.string,
+  format: PropTypes.boolean,
 };

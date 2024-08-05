@@ -1,10 +1,8 @@
 import { create } from "zustand";
-import { MarkdownComponente } from "../components/Markdown";
-import { Editor } from "../components/cm/Editor";
 
 const navigateStore = create((set) => ({
-    Component: Editor,
-    setShowComponent: (component) => set({ Component: component }),
+    href: "/dashboard",
+    setHref: (href) => set({ href }),
 }))
 
 export default navigateStore;
