@@ -13,171 +13,6 @@ import openai from "../helpers/openia";
 import tableStore from "../store/tableStore";
 import prompts from "../helpers/prompts";
 
-const str = `// Creacion de la base de datos en JavaScript
-
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('database', 'username', 'password', {
-    host: 'localhost',
-    dialect: 'mysql'
-});
-
-const Empleados = sequelize.define('Empleados', {
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    nombre: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    departamento_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'Departamentos',
-            key: 'id'
-        }
-    },
-    puesto_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'Puestos',
-            key: 'id'
-        }
-    }
-});
-
-const Departamentos = sequelize.define('Departamentos', {
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    nombre: {
-        type: DataTypes.STRING,
-        allowNull: false
-    }
-});
-
-const Puestos = sequelize.define('Puestos', {
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    titulo: {
-        type: DataTypes.STRING,
-        allowNull: false
-    }
-});
-
-const Proyectos = sequelize.define('Proyectos', {
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    nombre: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    gerente_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'Empleados',
-            key: 'id'
-        }
-    },
-    presupuesto: {
-        type: DataTypes.FLOAT,
-        allowNull: false
-    }
-});
-
-const Tareas = sequelize.define('Tareas', {
-    id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    proyecto_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'Proyectos',
-            key: 'id'
-        }
-    },
-    nombre: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    responsable_id: {
-        type: DataTypes.INTEGER,
-        references: {
-            model: 'Empleados',
-            key: 'id'
-        }
-    },
-    fecha_inicio: {
-        type: DataTypes.DATE,
-        allowNull: false
-    },
-    fecha_fin: {
-        type: DataTypes.DATE,
-        allowNull: false
-    }
-});
-
-sequelize.sync();
-
-========== FIELDS ==========
-
-{
-    Empleados: {
-        id: 'INTEGER',
-        nombre: 'STRING',
-        departamento_id: {
-            valueType: 'INTEGER',
-            reference: { table: 'Departamentos', field: 'id' }
-        },
-        puesto_id: {
-            valueType: 'INTEGER',
-            reference: { table: 'Puestos', field: 'id' }
-        }
-    },
-    Departamentos: {
-        id: 'INTEGER',
-        nombre: 'STRING'
-    },
-    Puestos: {
-        id: 'INTEGER',
-        titulo: 'STRING'
-    },
-    Proyectos: {
-        id: 'INTEGER',
-        nombre: 'STRING',
-        gerente_id: {
-            valueType: 'INTEGER',
-            reference: { table: 'Empleados', field: 'id' }
-        },
-        presupuesto: 'FLOAT'
-    },
-    Tareas: {
-        id: 'INTEGER',
-        proyecto_id: {
-            valueType: 'INTEGER',
-            reference: { table: 'Proyectos', field: 'id' }
-        },
-        nombre: 'STRING',
-        responsable_id: {
-            valueType: 'INTEGER',
-            reference: { table: 'Empleados', field: 'id' }
-        },
-        fecha_inicio: 'DATE',
-        fecha_fin: 'DATE'
-    }
-}`;
-
 export const Start = () => {
   const [value, setValue] = useState("");
   const [loading, setLoading] = useState(false);
@@ -191,19 +26,19 @@ export const Start = () => {
 
     const prompt = prompts.GENERATE_DB(value).prompt;
 
-    // let str = "";
+    let str = "";
 
-    // setLoading(true);
+    setLoading(true);
 
-    // const { textStream } = await streamText({
-    //   model: openai("gpt-4o"),
-    //   prompt,
-    //   maxTokens: 1000,
-    // });
+    const { textStream } = await streamText({
+      model: openai("gpt-4o"),
+      prompt,
+      maxTokens: 1000,
+    });
 
-    // for await (const textPart of textStream) {
-    //   str += textPart;
-    // }
+    for await (const textPart of textStream) {
+      str += textPart;
+    }
 
     const elements = parseText(str);
     const markdown = getMarkdown(str);
