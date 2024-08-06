@@ -12,6 +12,7 @@ export default {
       gridTemplateColumns: {
         "table": "40px 500px 1fr",
         "table-2": "40px 1fr",
+        "table-3": "40px 200px 1fr"
       }
     },
   },

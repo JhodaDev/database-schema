@@ -1,10 +1,9 @@
 import { useState } from "react";
-// import tableStore from "../store/tableStore";
-import { Input } from "./Input";
 import PropTypes from "prop-types";
 import { generateUUIDWithoutHyphens } from "../helpers/parseText";
 import { IconCube } from "./icons/IconCube";
 import { IconAdd } from "./icons/IconAdd";
+import { Input } from "./ui/Input";
 
 function Table({ data }) {
   const [items, setItems] = useState(data.fields);

@@ -130,7 +130,7 @@ export default {
         ${data}
     `
   }),
-  GENERATE_QUERY: (data, query) => (`
+  GENERATE_QUERY: (data, query, language) => (`
     Eres una IA especializaad en generar consultas de base de datos.
     Dependiendo del tipo de base de datos que se te pase (SQL o NOSQL), debes generar la consulta
     adecuada basandote en las especificaciones propocionadas.
@@ -152,6 +152,8 @@ export default {
         todos estos factores, el json puede lucir asi:
         4. Solo puedes devolver una consulta, es decir no puedes generar una para sql y otra para nosql solo una y es la que se te especifica
         5. No agregue ningun formato a la respuesta que no sea el que se te indique, no agregues comentarios ni uses markdown
+        6. Para el caso de bases de datos no relacionales que entregas un codigo tipo shell, formatea el codigo, no lo dejes todo en una sola linea,
+            ESTA REGLA APLICA UNICAMENTE PARA BASES DE DATOS NO RELACIONALES
 
             {
                 table1: {
@@ -224,10 +226,13 @@ export default {
                 resultados por edad en orden ascendente
 
             Output: 
-                db.persona.find({ name: 'example' }).sort({ age: 1 })
-
+                {
+                    "query": "db.persona.find({ name: 'example' }).sort({ age: 1 })"
+                    "language": "SQL"
+                }
+                
         Apartir de todas la reglas genera los datos con la siguiente informacion
-        DB: SQL
+        DB: ${language}
         ${data}
         ${query}
     `)

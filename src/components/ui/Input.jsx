@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
 import { Handle, Position } from "@xyflow/react";
 import { useRef, useState } from "react";
-import tableStore from "../store/tableStore";
-import { Diamon } from "./icons/Diamon";
+import { Diamond } from "../icons/Diamond";
+import tableStore from "../../store/tableStore";
 
 export const Input = ({ id, position, valueInput = "Campo", ...props }) => {
   const { setActiveIndex } = tableStore();
@@ -31,7 +31,7 @@ export const Input = ({ id, position, valueInput = "Campo", ...props }) => {
     <div
       className={`w-full px-4 text-left select-none relative py-1 flex items-center gap-2`}
     >
-      {position === "Left" && <Diamon />}
+      {position === "Left" && <Diamond />}
       <input
         type="text"
         className={`w-full focus:outline-none select-none bg-transparent border-none py-1 ${

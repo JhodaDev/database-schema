@@ -6,6 +6,8 @@ import prompts from "../helpers/prompts";
 import { streamText } from "ai";
 import openai from "../helpers/openia";
 import { useState } from "react";
+import { ListTables } from "../components/ListTables";
+import Select from "react-select";
 
 export const AI = () => {
   const { jsonTables } = useAIStore();
@@ -17,11 +19,13 @@ export const AI = () => {
   const formik = useFormik({
     initialValues: {
       query: "",
+      language: "",
     },
     onSubmit: async (values) => {
       const prompt = prompts.GENERATE_QUERY(
         JSON.stringify(jsonTables),
-        values.query
+        values.query,
+        values.language.value
       );
       let str = "";
 
@@ -35,26 +39,44 @@ export const AI = () => {
       for await (const textPart of textStream) {
         str += textPart;
       }
+
+      console.log(values.language.value);
+
       setLoading(false);
       const responseJson = JSON.parse(str);
       setResponseText(responseJson.query);
-      setLaguange(responseJson.language);
+      setLaguange(values.language.value);
       setInitComponent(false);
     },
   });
 
   return (
-    <div className="w-full h-screen grid grid-cols-table-2">
+    <div className="w-full h-screen grid grid-cols-table-3">
       <LeftBar />
-      <div className="flex flex-col justify-center items-center max-w-6xl mx-auto w-full">
+      <ListTables />
+      <div className="flex flex-col justify-center items-center max-w-7xl mx-auto w-full">
         <h2 className="text-3xl mb-4">Optimize Your Query</h2>
         <span className="mb-10">Make queries perform better.</span>
         <div className="grid grid-cols-2 gap-x-4 w-full">
           <form onSubmit={formik.handleSubmit}>
             <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mb-3 inline-block">
-              Insert your Query
+              Select your database
             </span>
+
+            <div className="mb-4 text-sm">
+              <Select
+                name="language"
+                value={formik.values.language}
+                onChange={(value) => formik.setFieldValue("language", value)}
+                defaultValue="Example"
+                options={[
+                  { value: "SQL", label: "SQL" },
+                  { value: "SHELL", label: "MongoDB" },
+                ]}
+              />
+            </div>
             <textarea
+              placeholder="Obtener los nombres de los empleados que están trabajando en un proyecto específico, junto con el título del puesto que ocupan y el nombre del departamento al que pertenecen."
               value={formik.values.query}
               onChange={formik.handleChange}
               name="query"
@@ -84,11 +106,13 @@ export const AI = () => {
               ) : initComponent ? (
                 <span>Generation...</span>
               ) : (
-                <Editor
-                  language={language}
-                  code={responseText}
-                  format={false}
-                />
+                <div className=" max-h-[450px] h-full overflow-auto">
+                  <Editor
+                    language={language}
+                    code={responseText}
+                    format={false}
+                  />
+                </div>
               )}
             </div>
           </div>

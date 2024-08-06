@@ -8,17 +8,24 @@ import * as prettierPl from "prettier/parser-babel";
 import * as prettierPluginEstree from "prettier/plugins/estree";
 import prettierPluginSql from "prettier-plugin-sql";
 import { sql } from "@codemirror/lang-sql";
+import { StreamLanguage } from "@codemirror/language";
+import { shell } from "@codemirror/legacy-modes/mode/shell";
 
 const languages = {
   JS: {
-    language: javascript,
+    language: javascript(),
     parser: "babel",
     plugins: [prettierPl, prettierPluginEstree],
   },
   SQL: {
-    language: sql,
+    language: sql(),
     parser: "sql",
     plugins: [prettierPluginSql],
+  },
+  SHELL: {
+    language: StreamLanguage.define(shell),
+    parser: null,
+    plugins: [],
   },
 };
 
@@ -27,7 +34,7 @@ export const Editor = ({ code, language = "JS" }) => {
   const editor = useRef(null);
 
   useEffect(() => {
-    if (language.length) {
+    if (languages[language].parser) {
       (async () => {
         const formatted = await prettier.format(code, {
           parser: languages[language].parser,
@@ -39,12 +46,14 @@ export const Editor = ({ code, language = "JS" }) => {
 
         setFormatted(formatted);
       })();
+    } else {
+      setFormatted(code);
     }
   }, [code, language]);
 
   const { setContainer } = useCodeMirror({
     container: editor.current,
-    extensions: [languages[language]?.language()],
+    extensions: [languages[language]?.language],
     value: formatted,
     height: "100%",
     theme: githubLight,
@@ -68,5 +77,5 @@ export const Editor = ({ code, language = "JS" }) => {
 Editor.propTypes = {
   code: PropTypes.string.isRequired,
   language: PropTypes.string,
-  format: PropTypes.boolean,
+  format: PropTypes.bool,
 };
