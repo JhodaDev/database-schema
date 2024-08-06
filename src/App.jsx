@@ -4,6 +4,7 @@ import { Start } from "./pages/Start";
 import "react-tooltip/dist/react-tooltip.css";
 import { Options } from "./pages/Options";
 import { AI } from "./pages/Ai";
+import { GenerateData } from "./pages/GenerateData";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
   {
     path: "/ai",
     element: <AI />,
+  },
+  {
+    path: "/generator",
+    element: <GenerateData />,
   },
 ]);
 

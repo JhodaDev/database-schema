@@ -4,10 +4,12 @@ import navigateStore from "../store/navigateStore";
 import { Tooltip } from "react-tooltip";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { IconData } from "./icons/IconData";
 
 const menu = [
   { href: "/dashboard", icon: <IoMdCode />, label: "Code" },
   { href: "/ai", icon: <VscJson />, label: "Generate data" },
+  { href: "/generator", icon: <IconData />, label: "Generate data" },
 ];
 
 export const LeftBar = () => {

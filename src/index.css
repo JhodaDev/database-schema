@@ -11,7 +11,7 @@ code {
 }
 
 .hljs {
-  @apply bg-[#1c1c1c];
+  @apply rounded-md h-full;
 }
 
 .react-flow__handle {

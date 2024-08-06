@@ -40,8 +40,6 @@ export const AI = () => {
         str += textPart;
       }
 
-      console.log(values.language.value);
-
       setLoading(false);
       const responseJson = JSON.parse(str);
       setResponseText(responseJson.query);
@@ -55,7 +53,7 @@ export const AI = () => {
       <LeftBar />
       <ListTables />
       <div className="flex flex-col justify-center items-center max-w-7xl mx-auto w-full">
-        <h2 className="text-3xl mb-4">Optimize Your Query</h2>
+        <h2 className="text-3xl mb-4">Generate queries</h2>
         <span className="mb-10">Make queries perform better.</span>
         <div className="grid grid-cols-2 gap-x-4 w-full">
           <form onSubmit={formik.handleSubmit}>
@@ -106,7 +104,7 @@ export const AI = () => {
               ) : initComponent ? (
                 <span>Generation...</span>
               ) : (
-                <div className=" max-h-[450px] h-full overflow-auto">
+                <div className="max-h-[450px] h-full overflow-auto">
                   <Editor
                     language={language}
                     code={responseText}

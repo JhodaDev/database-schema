@@ -128,9 +128,9 @@ export default {
 
         esta es la descripcion:
         ${data}
-    `
+    `,
   }),
-  GENERATE_QUERY: (data, query, language) => (`
+  GENERATE_QUERY: (data, query, language) => `
     Eres una IA especializaad en generar consultas de base de datos.
     Dependiendo del tipo de base de datos que se te pase (SQL o NOSQL), debes generar la consulta
     adecuada basandote en las especificaciones propocionadas.
@@ -235,5 +235,45 @@ export default {
         DB: ${language}
         ${data}
         ${query}
-    `)
+    `,
+  GENERATE_DATA: (data) => `
+    Eres un experto en generacion de datos, tu tarea es generar datos en diferentes formatos,
+    como SQL, MongoDB, CSV, JSON, etc. A continuacion se te dara una lista de instrucciones que debes
+    tener en cuenta para generar los datos.
+
+        1. Debes generar los datos en el formato que se te indique y todos los formatos debes devolverlos en
+            markdown
+        2. No agregues ningun tipo de comentario en los datos generados
+        3. No generes mas de 20 registros
+        4. Los datos generados deben ser aleatorios
+        5. Unicamente puedes genrar 1 solo formato, no puedes devolver mas de un formato
+
+    A continuacion se te dara un ejemplo de como se te entregara la informacion para que generes los datos
+
+        {
+            "format": "SQL",
+            "count": 10,
+            "fields": [
+                {
+                    "value": "id",
+                    "type": "integer"
+                },
+                {
+                    "value": "nombre",
+                    "type": "string"
+                },
+                {
+                    "value": "departamento_id",
+                    "type": "integer"
+                },
+                {
+                    "value": "puesto_id",
+                    "type": "integer"
+                }
+            ]
+        }
+
+    A partir de la informacion anterior genera los datos en el formato que se te indique con la siguiente informacion
+    ${data}
+  `,
 };
